@@ -2,37 +2,29 @@ const express = require('express');
 const { connection } = require('./Config/db')
 const cors = require('cors');
 const winston = require('winston');
-const companyRoutes = require('./Routes/company.routes'); // replace with the actual path to your company routes
+const redis = require('redis');
+const companyRoutes = require('./Routes/company.routes'); 
+const orderRoutes =  require("./Routes/order.routes");
 const app = express();
 app.use(express.json())
 require('dotenv').config()
 
-// Logger configuration
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
-});
+const REDIS_PORT = process.env.PORT || 6379;
 
-// Middleware for logging errors
-app.use((err, req, res, next) => {
-  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-  next(err);
-});
+// const client = redis.createClient(REDIS_PORT);
+// Export the Redis client
+// module.exports = { client };
+
 
 app.use(express.json());
-
-// Define a whitelist array of allowed origins
-const whitelist = ['https://legendary-malasada-09214f.netlify.app','http://localhost:5173'];
 
 // Configure CORS to dynamically set the allowed origin
 app.use(cors());
 
 // Use the company routes
-app.use('/api', companyRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/orders', orderRoutes);
+
 
 const port = process.env.PORT || 3031;
 app.listen(port, async () => {
