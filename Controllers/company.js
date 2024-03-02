@@ -28,6 +28,7 @@ exports.createCompany = async (req, res) => {
 exports.getCompanies = async (req, res) => {
   try {
     const companies = await Company.find({});
+    console.log(companies)
     res.send(companies);
   } catch (error) {
     logger.error(error.message);

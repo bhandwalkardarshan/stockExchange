@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 // Order Schema
 const orderSchema = new Schema({
-    company_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Company',
+    company_symbol: {
+      type: String,
       required: true
     },
     price: {
